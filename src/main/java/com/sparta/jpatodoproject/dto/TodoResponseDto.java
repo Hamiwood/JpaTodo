@@ -1,5 +1,6 @@
 package com.sparta.jpatodoproject.dto;
 
+import com.sparta.jpatodoproject.entity.Timestamped;
 import com.sparta.jpatodoproject.entity.Todo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,6 @@ public class TodoResponseDto {
         this.title = todo.getTitle();
         this.contents = todo.getContents();
         this.createdAt = todo.getCreatedAt();
-        this.updatedAt = todo.getUpdatedAt();
+        this.updatedAt = LocalDateTime.now();
     }
 }

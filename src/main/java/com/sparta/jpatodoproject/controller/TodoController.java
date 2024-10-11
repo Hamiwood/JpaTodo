@@ -3,10 +3,9 @@ package com.sparta.jpatodoproject.controller;
 import com.sparta.jpatodoproject.dto.TodoRequestDto;
 import com.sparta.jpatodoproject.dto.TodoResponseDto;
 import com.sparta.jpatodoproject.service.TodoService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/todo")
@@ -21,5 +20,20 @@ public class TodoController {
     @PostMapping
     public TodoResponseDto createTodo(@RequestBody TodoRequestDto reqDto){
         return todoService.createTodo(reqDto);
+    }
+
+    @GetMapping
+    public List<TodoResponseDto> showAllTodo(){
+        return todoService.showAllTodo();
+    }
+
+    @PutMapping("/{id}")
+    public TodoResponseDto updateTodo(@PathVariable int id, @RequestBody TodoRequestDto reqDto){
+        return todoService.updateTodo(id, reqDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public String removeTodo(@PathVariable int id){
+        return todoService.removeTodo(id);
     }
 }
