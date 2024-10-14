@@ -1,8 +1,11 @@
 package com.sparta.jpatodoproject.service;
 
+import com.sparta.jpatodoproject.dto.CommentResponseDto;
 import com.sparta.jpatodoproject.dto.TodoRequestDto;
 import com.sparta.jpatodoproject.dto.TodoResponseDto;
+import com.sparta.jpatodoproject.entity.Comment;
 import com.sparta.jpatodoproject.entity.Todo;
+import com.sparta.jpatodoproject.repository.CommentRepository;
 import com.sparta.jpatodoproject.repository.TodoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,7 @@ import java.util.List;
 public class TodoService {
 
     private final TodoRepository todoRepository;
+    private final CommentRepository commentRepository;
 
     public TodoResponseDto createTodo(TodoRequestDto reqDto) {
         Todo todo = todoRepository.save(new Todo(reqDto));
@@ -34,6 +38,22 @@ public class TodoService {
         return resDtoList;
     }
 
+    public TodoResponseDto showOneTodo(int id) {
+
+        Todo todo = todoRepository.findById(id).orElseThrow(() ->
+                new NullPointerException("해당 일정을 찾을 수 없습니다")
+        );
+
+        List<Comment> commentList = commentRepository.findByTodoId(id);
+        List<CommentResponseDto> resDtoList = new ArrayList<>();
+
+        for (Comment comment : commentList) {
+            resDtoList.add(new CommentResponseDto(comment));
+        }
+
+        return new TodoResponseDto(todo, resDtoList);
+    }
+
     @Transactional
     public TodoResponseDto updateTodo(int id, TodoRequestDto reqDto) {
         Todo todo = todoRepository.findById(id).orElseThrow(()->
@@ -47,12 +67,12 @@ public class TodoService {
 
     @Transactional
     public String removeTodo(int id) {
-        Todo todo = todoRepository.findById(id).orElseThrow(()->
+        todoRepository.findById(id).orElseThrow(()->
                 new NullPointerException("해당 일정을 찾을 수 없습니다")
         );
 
         todoRepository.deleteById(id);
 
-        return id+"이(가) 정상적으로 삭제되었습니다";
+        return id+"이(가) 성공적으로 삭제되었습니다";
     }
 }

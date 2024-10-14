@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -17,6 +18,7 @@ public class TodoResponseDto {
     private String contents;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private List<CommentResponseDto> comments;
 
     public TodoResponseDto(Todo todo) {
         this.id = todo.getId();
@@ -25,5 +27,15 @@ public class TodoResponseDto {
         this.contents = todo.getContents();
         this.createdAt = todo.getCreatedAt();
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public TodoResponseDto(Todo todo, List<CommentResponseDto> commentList) {
+        this.id = todo.getId();
+        this.username = todo.getUsername();
+        this.title = todo.getTitle();
+        this.contents = todo.getContents();
+        this.createdAt = todo.getCreatedAt();
+        this.updatedAt = LocalDateTime.now();
+        this.comments = commentList;
     }
 }
