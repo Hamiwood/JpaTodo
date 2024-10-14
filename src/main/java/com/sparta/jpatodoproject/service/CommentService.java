@@ -28,6 +28,21 @@ public class CommentService {
     }
 
     @Transactional
+    public CommentResponseDto updateComment(int todoId, int id, CommentResponseDto reqDto) {
+        todoRepository.findById(todoId).orElseThrow(()->
+                new NullPointerException("해당 일정을 찾을 수 없습니다")
+        );
+
+        Comment comment = commentRepository.findById(id).orElseThrow(()->
+                new NullPointerException("해당 댓글을 찾을 수 없습니다")
+        );
+
+        comment.update(reqDto);
+
+        return new CommentResponseDto(comment, todoId);
+    }
+
+    @Transactional
     public String removeComment(int id) {
         commentRepository.findById(id).orElseThrow(()->
                 new NullPointerException("해당 댓글을 찾을 수 없습니다")
@@ -36,4 +51,5 @@ public class CommentService {
         commentRepository.deleteById(id);
         return id+"이(가) 성공적으로 삭제되었습니다";
     }
+
 }

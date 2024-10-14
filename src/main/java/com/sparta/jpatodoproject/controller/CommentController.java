@@ -21,6 +21,11 @@ public class CommentController {
         return commentService.createComment(todoId, reqDto);
     }
 
+    @PutMapping("/{todoId}/{id}")
+    public CommentResponseDto updateComment(@PathVariable int todoId, @PathVariable int id, @RequestBody CommentResponseDto reqDto){
+        return commentService.updateComment(todoId, id, reqDto);
+    }
+
     @DeleteMapping("/{id}")
     public String deleteComment(@PathVariable int id) {
         return commentService.removeComment(id);

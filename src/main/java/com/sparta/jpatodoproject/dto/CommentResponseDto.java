@@ -22,8 +22,7 @@ public class CommentResponseDto {
         this.username = comment.getUsername();
         this.contents = comment.getContents();
         this.createdAt = comment.getCreatedAt();
-        this.updatedAt = comment.getUpdatedAt();
+        this.updatedAt = LocalDateTime.now();
         this.todo_id = todoId;
     }
-
 }

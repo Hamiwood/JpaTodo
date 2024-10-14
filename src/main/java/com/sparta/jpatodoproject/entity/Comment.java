@@ -1,6 +1,7 @@
 package com.sparta.jpatodoproject.entity;
 
 import com.sparta.jpatodoproject.dto.CommentRequestDto;
+import com.sparta.jpatodoproject.dto.CommentResponseDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,5 +31,10 @@ public class Comment extends Timestamped{
         this.username=reqDto.getUsername();
         this.contents=reqDto.getContents();
         this.todo = todo;
+    }
+
+    public void update(CommentResponseDto reqDto) {
+        this.contents=reqDto.getContents();
+        this.username=reqDto.getUsername();
     }
 }
