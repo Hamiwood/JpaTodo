@@ -8,6 +8,9 @@ import com.sparta.jpatodoproject.entity.Todo;
 import com.sparta.jpatodoproject.repository.CommentRepository;
 import com.sparta.jpatodoproject.repository.TodoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +30,7 @@ public class TodoService {
         return new TodoResponseDto(todo);
     }
 
-    public List<TodoResponseDto> showAllTodo() {
+    public Page<TodoResponseDto> showAllTodo(Pageable pageable) {
         List<Todo> todoList = todoRepository.findAll();
         List<TodoResponseDto> resDtoList = new ArrayList<>();
 
@@ -35,7 +38,9 @@ public class TodoService {
             resDtoList.add(new TodoResponseDto(todo));
         }
 
-        return resDtoList;
+        int start = (int)pageable.getOffset();
+        int end = Math.min((start+pageable.getPageSize()), resDtoList.size());
+        return new PageImpl<>(resDtoList.subList(start, end), pageable, resDtoList.size());
     }
 
     public TodoResponseDto showOneTodo(int id) {
