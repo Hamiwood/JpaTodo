@@ -1,5 +1,6 @@
 package com.sparta.jpatodoproject.entity;
 
+import com.sparta.jpatodoproject.dto.CommentRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,12 @@ public class Comment extends Timestamped{
     private String contents;
 
     @ManyToOne
-    @JoinColumn(name = "todo_id")
+    @JoinColumn(name = "todo_id", nullable = false)
     private Todo todo;
+
+    public Comment(CommentRequestDto reqDto, Todo todo) {
+        this.username=reqDto.getUsername();
+        this.contents=reqDto.getContents();
+        this.todo = todo;
+    }
 }

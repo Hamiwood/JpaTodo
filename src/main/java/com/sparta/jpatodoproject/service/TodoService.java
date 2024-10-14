@@ -48,7 +48,7 @@ public class TodoService {
         List<CommentResponseDto> resDtoList = new ArrayList<>();
 
         for (Comment comment : commentList) {
-            resDtoList.add(new CommentResponseDto(comment));
+            resDtoList.add(new CommentResponseDto(comment, id));
         }
 
         return new TodoResponseDto(todo, resDtoList);

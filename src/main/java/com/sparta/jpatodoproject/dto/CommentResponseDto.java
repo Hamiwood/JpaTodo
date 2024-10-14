@@ -1,6 +1,7 @@
 package com.sparta.jpatodoproject.dto;
 
 import com.sparta.jpatodoproject.entity.Comment;
+import com.sparta.jpatodoproject.entity.Todo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,12 +17,13 @@ public class CommentResponseDto {
     private LocalDateTime updatedAt;
     private int todo_id;
 
-    public CommentResponseDto(Comment comment) {
+    public CommentResponseDto(Comment comment, int todoId) {
         this.id = comment.getId();
         this.username = comment.getUsername();
         this.contents = comment.getContents();
         this.createdAt = comment.getCreatedAt();
         this.updatedAt = comment.getUpdatedAt();
+        this.todo_id = todoId;
     }
 
 }
