@@ -8,6 +8,7 @@ import com.sparta.jpatodoproject.repository.CommentRepository;
 import com.sparta.jpatodoproject.repository.TodoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,5 +25,15 @@ public class CommentService {
 
         Comment comment = commentRepository.save(new Comment(reqDto, todo));
         return new CommentResponseDto(comment, todoId);
+    }
+
+    @Transactional
+    public String removeComment(int id) {
+        commentRepository.findById(id).orElseThrow(()->
+                new NullPointerException("해당 댓글을 찾을 수 없습니다")
+        );
+
+        commentRepository.deleteById(id);
+        return id+"이(가) 성공적으로 삭제되었습니다";
     }
 }
