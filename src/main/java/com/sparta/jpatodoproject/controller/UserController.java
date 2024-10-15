@@ -42,8 +42,8 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public UserResponseDto registerUser(@RequestBody SignUpRequestDto reqDto) {
-        return userService.signUp(reqDto);
+    public UserResponseDto registerUser(@RequestBody SignUpRequestDto reqDto, HttpServletResponse res) {
+        return userService.signUp(reqDto, res);
     }
 
     @PostMapping("/login")

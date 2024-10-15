@@ -67,7 +67,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDto signUp(SignUpRequestDto reqDto) {
+    public UserResponseDto signUp(SignUpRequestDto reqDto, HttpServletResponse res) {
         userRepository.findByEmail(reqDto.getEmail())
                 .ifPresent(user -> {
                     throw new IllegalArgumentException("이미 존재하는 이메일입니다");
@@ -91,14 +91,15 @@ public class UserService {
 
         userRepository.save(user);
 
+//        login(new LoginRequestDto(reqDto.getEmail(), reqDto.getPassword()), res);
         return new UserResponseDto(user);
     }
 
     public UserResponseDto login(LoginRequestDto reqDto, HttpServletResponse res) {
-        String username = reqDto.getUsername();
+        String email = reqDto.getEmail();
         String password = reqDto.getPassword();
 
-        User user = userRepository.findByUsername(username).orElseThrow(()->
+        User user = userRepository.findByEmail(email).orElseThrow(()->
                 new IllegalArgumentException("등록된 사용자가 없습니다")
         );
 
@@ -106,7 +107,7 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다");
         }
 
-        String token = jwtUtil.createToken(username, user.getRole());
+        String token = jwtUtil.createToken(email, user.getRole());
         jwtUtil.addJwtToCookie(token, res);
 
         return new UserResponseDto(user);
