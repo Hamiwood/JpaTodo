@@ -1,12 +1,15 @@
 package com.sparta.jpatodoproject.service;
 
 import com.sparta.jpatodoproject.config.PasswordEncoder;
+import com.sparta.jpatodoproject.dto.LoginRequestDto;
 import com.sparta.jpatodoproject.dto.SignUpRequestDto;
 import com.sparta.jpatodoproject.dto.UserRequestDto;
 import com.sparta.jpatodoproject.dto.UserResponseDto;
 import com.sparta.jpatodoproject.entity.User;
 import com.sparta.jpatodoproject.entity.UserRoleEnum;
+import com.sparta.jpatodoproject.jwt.JwtUtil;
 import com.sparta.jpatodoproject.repository.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +23,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     public UserResponseDto createUser(UserRequestDto reqDto) {
@@ -85,6 +90,24 @@ public class UserService {
         user.savePassword(encodedPassword);
 
         userRepository.save(user);
+
+        return new UserResponseDto(user);
+    }
+
+    public UserResponseDto login(LoginRequestDto reqDto, HttpServletResponse res) {
+        String username = reqDto.getUsername();
+        String password = reqDto.getPassword();
+
+        User user = userRepository.findByUsername(username).orElseThrow(()->
+                new IllegalArgumentException("등록된 사용자가 없습니다")
+        );
+
+        if(!passwordEncoder.matches(password, user.getPassword())){
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다");
+        }
+
+        String token = jwtUtil.createToken(username, user.getRole());
+        jwtUtil.addJwtToCookie(token, res);
 
         return new UserResponseDto(user);
     }
