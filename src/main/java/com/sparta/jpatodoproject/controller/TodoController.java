@@ -2,7 +2,6 @@ package com.sparta.jpatodoproject.controller;
 
 import com.sparta.jpatodoproject.dto.TodoRequestDto;
 import com.sparta.jpatodoproject.dto.TodoResponseDto;
-import com.sparta.jpatodoproject.dto.UserRequestDto;
 import com.sparta.jpatodoproject.dto.WriterRequestDto;
 import com.sparta.jpatodoproject.service.TodoService;
 import org.springframework.data.domain.Page;
@@ -10,8 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/todo")

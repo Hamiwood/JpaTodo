@@ -28,7 +28,7 @@ public class TodoService {
 
     public TodoResponseDto createTodo(WriterRequestDto reqDto) {
 
-        User user = new User(reqDto.getEmail(), reqDto.getUsername());
+        User user = new User(reqDto.getUsername(), reqDto.getEmail());
         userRepository.save(user);
 
         Todo todo = new Todo(reqDto.getTitle(),reqDto.getContents());

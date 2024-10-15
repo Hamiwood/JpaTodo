@@ -33,4 +33,9 @@ public class User extends Timestamped{
         this.username = username;
         this.email = email;
     }
+
+    public User(UserRequestDto reqDto) {
+        this.username = reqDto.getUsername();
+        this.email = reqDto.getEmail();
+    }
 }
