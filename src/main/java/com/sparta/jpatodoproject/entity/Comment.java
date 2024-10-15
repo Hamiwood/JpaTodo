@@ -3,6 +3,7 @@ package com.sparta.jpatodoproject.entity;
 import com.sparta.jpatodoproject.dto.CommentRequestDto;
 import com.sparta.jpatodoproject.dto.CommentResponseDto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,7 @@ public class Comment extends Timestamped{
     @Column(name = "user_id")
     private String userId;
     @Column(name = "contents")
+    @Size(min = 1, max = 50, message = "1자 이상 50자 이하로 작성해 주세요")
     private String contents;
 
     @ManyToOne

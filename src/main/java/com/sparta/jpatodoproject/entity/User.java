@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,8 +25,10 @@ public class User extends Timestamped{
     private Long id;
 
     @Column(name = "username")
+    @Size(min=2, max=6, message = "2자 이상 6자 이하로 작성해주세요")
     private String username;
     @Column(name = "email")
+    @Pattern(regexp = "^[\\\\w!#$%&'*+/=?`{|}~^.-]+@[\\\\w.-]+\\\\.[a-zA-Z]{2,6}$", message = "이메일 형식이 올바르지 않습니다")
     private String email;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
