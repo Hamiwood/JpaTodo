@@ -1,5 +1,6 @@
 package com.sparta.jpatodoproject.controller;
 
+import com.sparta.jpatodoproject.dto.SignUpRequestDto;
 import com.sparta.jpatodoproject.dto.UserRequestDto;
 import com.sparta.jpatodoproject.dto.UserResponseDto;
 import com.sparta.jpatodoproject.service.UserService;
@@ -35,5 +36,10 @@ public class UserController {
     @DeleteMapping("/{id}")
     public String removeUser(@PathVariable Long id) {
         return this.userService.removeUser(id);
+    }
+
+    @PostMapping("/signup")
+    public UserResponseDto registerUser(@RequestBody SignUpRequestDto reqDto) {
+        return userService.signUp(reqDto);
     }
 }
