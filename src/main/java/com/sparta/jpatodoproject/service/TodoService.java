@@ -1,12 +1,12 @@
 package com.sparta.jpatodoproject.service;
 
-import com.sparta.jpatodoproject.dto.CommentResponseDto;
-import com.sparta.jpatodoproject.dto.TodoRequestDto;
-import com.sparta.jpatodoproject.dto.TodoResponseDto;
+import com.sparta.jpatodoproject.dto.*;
 import com.sparta.jpatodoproject.entity.Comment;
 import com.sparta.jpatodoproject.entity.Todo;
+import com.sparta.jpatodoproject.entity.User;
 import com.sparta.jpatodoproject.repository.CommentRepository;
 import com.sparta.jpatodoproject.repository.TodoRepository;
+import com.sparta.jpatodoproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,10 +24,20 @@ public class TodoService {
 
     private final TodoRepository todoRepository;
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
 
-    public TodoResponseDto createTodo(TodoRequestDto reqDto) {
-        Todo todo = todoRepository.save(new Todo(reqDto));
-        return new TodoResponseDto(todo);
+    public TodoResponseDto createTodo(WriterRequestDto reqDto) {
+
+        User user = new User(reqDto.getEmail(), reqDto.getUsername());
+        userRepository.save(user);
+
+        Todo todo = new Todo(reqDto.getTitle(),reqDto.getContents());
+        todo.setUser(user);
+        todo.getUserList().add(user);
+
+        todoRepository.save(todo);
+
+        return new TodoResponseDto(todo, user.getId());
     }
 
     public Page<TodoResponseDto> showAllTodo(Pageable pageable) {
@@ -43,7 +53,7 @@ public class TodoService {
         return new PageImpl<>(resDtoList.subList(start, end), pageable, resDtoList.size());
     }
 
-    public TodoResponseDto showOneTodo(int id) {
+    public TodoResponseDto showOneTodo(Long id) {
 
         Todo todo = todoRepository.findById(id).orElseThrow(() ->
                 new NullPointerException("해당 일정을 찾을 수 없습니다")
@@ -60,7 +70,7 @@ public class TodoService {
     }
 
     @Transactional
-    public TodoResponseDto updateTodo(int id, TodoRequestDto reqDto) {
+    public TodoResponseDto updateTodo(Long id, TodoRequestDto reqDto) {
         Todo todo = todoRepository.findById(id).orElseThrow(()->
                 new NullPointerException("해당 일정을 찾을 수 없습니다")
         );
@@ -71,7 +81,7 @@ public class TodoService {
     }
 
     @Transactional
-    public String removeTodo(int id) {
+    public String removeTodo(Long id) {
         todoRepository.findById(id).orElseThrow(()->
                 new NullPointerException("해당 일정을 찾을 수 없습니다")
         );

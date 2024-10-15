@@ -18,27 +18,34 @@ public class Todo extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    @Column(name ="username")
-    private String username;
     @Column(name ="title")
     private String title;
+
     @Column(name ="contents")
     private String contents;
 
     @OneToMany(mappedBy = "todo", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
 
-    public Todo(TodoRequestDto reqDto) {
-        this.username = reqDto.getUsername();
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "writer",
+            joinColumns = @JoinColumn(name="todo_id"),
+            inverseJoinColumns = @JoinColumn(name="user_id"))
+    private List<User> userList = new ArrayList<>();
+
+    public void update(TodoRequestDto reqDto) {
         this.title = reqDto.getTitle();
         this.contents = reqDto.getContents();
     }
 
-    public void update(TodoRequestDto reqDto) {
-        this.username = reqDto.getUsername();
-        this.title = reqDto.getTitle();
-        this.contents = reqDto.getContents();
+    public Todo(String title, String contents) {
+        this.title = title;
+        this.contents = contents;
     }
 }

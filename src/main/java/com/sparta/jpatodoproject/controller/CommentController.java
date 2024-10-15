@@ -11,23 +11,22 @@ public class CommentController {
 
     private final CommentService commentService;
 
-
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
     }
 
     @PostMapping("/{todoId}")
-    public CommentResponseDto createComment(@PathVariable int todoId, @RequestBody CommentRequestDto reqDto) {
+    public CommentResponseDto createComment(@PathVariable Long todoId, @RequestBody CommentRequestDto reqDto) {
         return commentService.createComment(todoId, reqDto);
     }
 
     @PutMapping("/{todoId}/{id}")
-    public CommentResponseDto updateComment(@PathVariable int todoId, @PathVariable int id, @RequestBody CommentResponseDto reqDto){
+    public CommentResponseDto updateComment(@PathVariable Long todoId, @PathVariable Long id, @RequestBody CommentResponseDto reqDto){
         return commentService.updateComment(todoId, id, reqDto);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteComment(@PathVariable int id) {
+    public String deleteComment(@PathVariable Long id) {
         return commentService.removeComment(id);
     }
 }

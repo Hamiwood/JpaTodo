@@ -2,6 +2,8 @@ package com.sparta.jpatodoproject.controller;
 
 import com.sparta.jpatodoproject.dto.TodoRequestDto;
 import com.sparta.jpatodoproject.dto.TodoResponseDto;
+import com.sparta.jpatodoproject.dto.UserRequestDto;
+import com.sparta.jpatodoproject.dto.WriterRequestDto;
 import com.sparta.jpatodoproject.service.TodoService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +24,7 @@ public class TodoController {
     }
 
     @PostMapping
-    public TodoResponseDto createTodo(@RequestBody TodoRequestDto reqDto){
+    public TodoResponseDto createTodo(@RequestBody WriterRequestDto reqDto){
         return todoService.createTodo(reqDto);
     }
 
@@ -33,17 +35,17 @@ public class TodoController {
     }
 
     @GetMapping("/{id}")
-    public TodoResponseDto showOneTodo(@PathVariable int id){
+    public TodoResponseDto showOneTodo(@PathVariable Long id){
         return todoService.showOneTodo(id);
     }
 
     @PutMapping("/{id}")
-    public TodoResponseDto updateTodo(@PathVariable int id, @RequestBody TodoRequestDto reqDto){
+    public TodoResponseDto updateTodo(@PathVariable Long id, @RequestBody TodoRequestDto reqDto){
         return todoService.updateTodo(id, reqDto);
     }
 
     @DeleteMapping("/{id}")
-    public String removeTodo(@PathVariable int id){
+    public String removeTodo(@PathVariable Long id){
         return todoService.removeTodo(id);
     }
 }

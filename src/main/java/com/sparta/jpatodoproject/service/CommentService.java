@@ -17,7 +17,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final TodoRepository todoRepository;
 
-    public CommentResponseDto createComment(int todoId, CommentRequestDto reqDto) {
+    public CommentResponseDto createComment(Long todoId, CommentRequestDto reqDto) {
 
         Todo todo = todoRepository.findById(todoId).orElseThrow(()->
                 new IllegalArgumentException("해당 Id의 일정은 존재하지 않습니다")
@@ -28,7 +28,7 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto updateComment(int todoId, int id, CommentResponseDto reqDto) {
+    public CommentResponseDto updateComment(Long todoId, Long id, CommentResponseDto reqDto) {
         todoRepository.findById(todoId).orElseThrow(()->
                 new NullPointerException("해당 일정을 찾을 수 없습니다")
         );
@@ -43,7 +43,7 @@ public class CommentService {
     }
 
     @Transactional
-    public String removeComment(int id) {
+    public String removeComment(Long id) {
         commentRepository.findById(id).orElseThrow(()->
                 new NullPointerException("해당 댓글을 찾을 수 없습니다")
         );

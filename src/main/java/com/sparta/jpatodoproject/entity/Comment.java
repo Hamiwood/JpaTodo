@@ -16,10 +16,10 @@ public class Comment extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    @Column(name = "username")
-    private String username;
+    @Column(name = "user_id")
+    private String userId;
     @Column(name = "contents")
     private String contents;
 
@@ -28,13 +28,11 @@ public class Comment extends Timestamped{
     private Todo todo;
 
     public Comment(CommentRequestDto reqDto, Todo todo) {
-        this.username=reqDto.getUsername();
         this.contents=reqDto.getContents();
         this.todo = todo;
     }
 
     public void update(CommentResponseDto reqDto) {
         this.contents=reqDto.getContents();
-        this.username=reqDto.getUsername();
     }
 }
