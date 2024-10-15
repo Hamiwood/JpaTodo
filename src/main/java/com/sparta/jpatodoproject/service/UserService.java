@@ -5,6 +5,7 @@ import com.sparta.jpatodoproject.dto.SignUpRequestDto;
 import com.sparta.jpatodoproject.dto.UserRequestDto;
 import com.sparta.jpatodoproject.dto.UserResponseDto;
 import com.sparta.jpatodoproject.entity.User;
+import com.sparta.jpatodoproject.entity.UserRoleEnum;
 import com.sparta.jpatodoproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     public UserResponseDto createUser(UserRequestDto reqDto) {
         User user =  userRepository.save(new User(reqDto));
@@ -63,16 +65,23 @@ public class UserService {
     public UserResponseDto signUp(SignUpRequestDto reqDto) {
         userRepository.findByEmail(reqDto.getEmail())
                 .ifPresent(user -> {
-                    throw new RuntimeException("이미 존재하는 이메일입니다");
+                    throw new IllegalArgumentException("이미 존재하는 이메일입니다");
                 });
         userRepository.findByUsername(reqDto.getUsername())
                 .ifPresent(user -> {
-                   throw new RuntimeException("이미 존재하는 유저명 입니다");
+                   throw new IllegalArgumentException("이미 존재하는 유저명 입니다");
                 });
 
-        String encodedPassword = passwordEncoder.encode(reqDto.getPassword());
+        UserRoleEnum role = UserRoleEnum.USER;
+        if(reqDto.isAdmin()){
+            if(!ADMIN_TOKEN.equals(reqDto.getAdminToken())){
+                throw new IllegalArgumentException("관리자 암호가 일치하지 않습니다");
+            }
+            role = UserRoleEnum.ADMIN;
+        }
 
-        User user = new User(reqDto.getUsername(), reqDto.getEmail());
+        String encodedPassword = passwordEncoder.encode(reqDto.getPassword());
+        User user = new User(reqDto.getUsername(), reqDto.getEmail(), role);
         user.savePassword(encodedPassword);
 
         userRepository.save(user);

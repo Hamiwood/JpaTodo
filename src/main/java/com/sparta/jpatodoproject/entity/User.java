@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -36,9 +35,9 @@ public class User extends Timestamped{
     @Pattern(regexp = "^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$", message = "이메일 형식이 올바르지 않습니다")
     private String email;
 
-//    @Column(nullable = false)
-//    @Enumerated(value = EnumType.STRING)
-//    private UserRoleEnum role;
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Todo> todos = new ArrayList<>();
@@ -62,4 +61,9 @@ public class User extends Timestamped{
         this.password = password;
     }
 
+    public User(String username, String email, UserRoleEnum role) {
+        this.username = username;
+        this.email = email;
+        this.role = role;
+    }
 }
