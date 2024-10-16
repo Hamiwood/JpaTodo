@@ -29,6 +29,9 @@ public class Todo extends Timestamped{
     @Size(min = 1, max = 100, message = "1자 이상 100자 이하로 작성해 주세요")
     private String contents;
 
+    @Column(name = "weather")
+    private String weather;
+
     @OneToMany(mappedBy = "todo", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
 
@@ -41,6 +44,7 @@ public class Todo extends Timestamped{
             joinColumns = @JoinColumn(name="todo_id"),
             inverseJoinColumns = @JoinColumn(name="user_id"))
     private List<User> userList = new ArrayList<>();
+
 
     public void update(TodoRequestDto reqDto) {
         this.title = reqDto.getTitle();

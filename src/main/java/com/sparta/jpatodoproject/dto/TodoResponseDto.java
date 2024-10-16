@@ -17,7 +17,9 @@ public class TodoResponseDto {
     private String contents;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String weather;
     private List<CommentResponseDto> comments;
+
 
     public TodoResponseDto(Todo todo){
         this.id = todo.getId();
@@ -26,6 +28,7 @@ public class TodoResponseDto {
         this.contents = todo.getContents();
         this.createdAt = todo.getCreatedAt();
         this.updatedAt = todo.getUpdatedAt();
+        this.weather = todo.getWeather();
     }
 
     public TodoResponseDto(Todo todo, List<CommentResponseDto> commentList) {
@@ -35,6 +38,7 @@ public class TodoResponseDto {
         this.contents = todo.getContents();
         this.createdAt = todo.getCreatedAt();
         this.updatedAt = todo.getUpdatedAt();
+        this.weather = todo.getWeather();
         this.comments = commentList;
     }
 
@@ -45,5 +49,6 @@ public class TodoResponseDto {
         this.contents = todo.getContents();
         this.createdAt = todo.getCreatedAt();
         this.updatedAt = LocalDateTime.now();
+        this.weather = todo.getWeather();
     }
 }
