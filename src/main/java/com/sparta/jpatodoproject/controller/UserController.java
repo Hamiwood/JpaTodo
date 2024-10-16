@@ -5,7 +5,6 @@ import com.sparta.jpatodoproject.dto.SignUpRequestDto;
 import com.sparta.jpatodoproject.dto.UserRequestDto;
 import com.sparta.jpatodoproject.dto.UserResponseDto;
 import com.sparta.jpatodoproject.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,12 +20,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public UserResponseDto createUser(@RequestBody UserRequestDto reqDto) {
-        return userService.createUser(reqDto);
-    }
-
-    @GetMapping
+    @GetMapping("/get")
     public List<UserResponseDto> showAllUser() {
         return this.userService.showAllUser();
     }

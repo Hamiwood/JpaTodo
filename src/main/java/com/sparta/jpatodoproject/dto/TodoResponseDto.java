@@ -1,7 +1,6 @@
 package com.sparta.jpatodoproject.dto;
 
 import com.sparta.jpatodoproject.entity.Todo;
-import com.sparta.jpatodoproject.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

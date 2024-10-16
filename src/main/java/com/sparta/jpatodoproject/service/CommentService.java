@@ -80,7 +80,7 @@ public class CommentService {
         }
 
         commentRepository.deleteById(id);
-        return id+"이(가) 성공적으로 삭제되었습니다";
+        return "댓글"+id+"이(가) 성공적으로 삭제되었습니다";
     }
 
 }

@@ -7,30 +7,24 @@ import com.sparta.jpatodoproject.entity.User;
 import com.sparta.jpatodoproject.entity.UserRoleEnum;
 import com.sparta.jpatodoproject.repository.CommentRepository;
 import com.sparta.jpatodoproject.repository.TodoRepository;
-import com.sparta.jpatodoproject.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j(topic="WEATHER API")
 @Service
@@ -63,7 +57,6 @@ public class TodoService {
     private String getWeatherFromApi() {
         String weatherUrl = "https://f-api.github.io/f-api/weather.json";
 
-        // RestTemplate으로 외부 API 호출
         ResponseEntity<String> response = restTemplate.getForEntity(weatherUrl, String.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
@@ -74,7 +67,6 @@ public class TodoService {
             for(int i = 0; i < json.length(); i++) {
                 JSONObject jsonObject = json.getJSONObject(i);
 
-                // 'date' 필드가 오늘 날짜와 일치하면 해당 'weather' 값 반환
                 if (jsonObject.getString("date").equals(today)) {
                     return jsonObject.getString("weather");
                 }
@@ -86,16 +78,21 @@ public class TodoService {
     }
 
     public Page<TodoResponseDto> showAllTodo(Pageable pageable) {
-        List<Todo> todoList = todoRepository.findAll();
-        List<TodoResponseDto> resDtoList = new ArrayList<>();
 
-        for(Todo todo : todoList){
-            resDtoList.add(new TodoResponseDto(todo));
-        }
+        Pageable sortedByUpdatedAt = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(Sort.Direction.DESC, "updatedAt")
+        );
 
-        int start = (int)pageable.getOffset();
-        int end = Math.min((start+pageable.getPageSize()), resDtoList.size());
-        return new PageImpl<>(resDtoList.subList(start, end), pageable, resDtoList.size());
+
+        Page<Todo> todoPage = todoRepository.findAll(sortedByUpdatedAt);
+        List<TodoResponseDto> resDtoList = todoPage
+                .stream()
+                .map(TodoResponseDto::new)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(resDtoList, sortedByUpdatedAt, todoPage.getTotalElements());
     }
 
     public TodoResponseDto showOneTodo(Long id) {
@@ -147,7 +144,7 @@ public class TodoService {
 
         todoRepository.deleteById(id);
 
-        return id+"이(가) 성공적으로 삭제되었습니다";
+        return "일정"+id+"이(가) 성공적으로 삭제되었습니다";
     }
 
 }

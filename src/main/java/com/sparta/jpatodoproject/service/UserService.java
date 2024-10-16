@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +28,6 @@ public class UserService {
     private final JwtUtil jwtUtil;
 
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
-
-    public UserResponseDto createUser(UserRequestDto reqDto) {
-        User user =  userRepository.save(new User(reqDto));
-
-        return new UserResponseDto(user);
-    }
 
     public List<UserResponseDto> showAllUser() {
         List<User> users = userRepository.findAll();

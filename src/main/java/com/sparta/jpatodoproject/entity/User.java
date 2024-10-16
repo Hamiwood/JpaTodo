@@ -46,12 +46,6 @@ public class User extends Timestamped{
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
-
-    public User(UserRequestDto reqDto) {
-        this.username = reqDto.getUsername();
-        this.email = reqDto.getEmail();
-    }
-
     public void update(UserRequestDto reqDto) {
         this.username = reqDto.getUsername();
         this.email = reqDto.getEmail();

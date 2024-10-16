@@ -35,7 +35,7 @@ public class AuthFilter implements Filter {
         String url = httpServletRequest.getRequestURI();
 
         if (StringUtils.hasText(url) &&
-                (url.startsWith("/user/login") || url.startsWith("/user/signup") || url.startsWith("/todo/get"))
+                (url.startsWith("/user/login") || url.contains("/user/signup") || url.contains("get"))
         ) {
             // 회원가입, 로그인 관련 API 는 인증 필요없이 요청 진행
             chain.doFilter(request, response); // 다음 Filter 로 이동
