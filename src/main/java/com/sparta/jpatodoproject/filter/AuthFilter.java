@@ -6,6 +6,7 @@ import com.sparta.jpatodoproject.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -20,10 +21,12 @@ public class AuthFilter implements Filter {
 
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
+    private final HttpServletResponse httpServletResponse;
 
-    public AuthFilter(UserRepository userRepository, JwtUtil jwtUtil) {
+    public AuthFilter(UserRepository userRepository, JwtUtil jwtUtil, HttpServletResponse httpServletResponse) {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
+        this.httpServletResponse = httpServletResponse;
     }
 
     @Override
@@ -47,20 +50,23 @@ public class AuthFilter implements Filter {
 
                 // 토큰 검증
                 if (!jwtUtil.validateToken(token)) {
-                    throw new IllegalArgumentException("Token Error");
+                    httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                    httpServletResponse.getWriter().write("유효하지 않은 토큰입니다");
+                    return;
                 }
 
                 // 토큰에서 사용자 정보 가져오기
                 Claims info = jwtUtil.getUserInfoFromToken(token);
 
                 User user = userRepository.findByEmail(info.getSubject()).orElseThrow(() ->
-                        new NullPointerException("Not Found User")
+                        new NullPointerException("해당 유저를 찾을 수 없습니다")
                 );
 
                 request.setAttribute("user", user);
                 chain.doFilter(request, response); // 다음 Filter 로 이동
             } else {
-                throw new IllegalArgumentException("Not Found Token");
+                httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                httpServletResponse.getWriter().write("토큰을 찾을 수 없습니다");
             }
         }
     }
