@@ -26,13 +26,13 @@ public class TodoController {
         return todoService.createTodo(reqDto, httpreq);
     }
 
-    @GetMapping
+    @GetMapping("/get")
     public ResponseEntity<?> showAllTodo(@PageableDefault(size=10) Pageable pageable){
         Page<TodoResponseDto> result = todoService.showAllTodo(pageable);
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public TodoResponseDto showOneTodo(@PathVariable Long id){
         return todoService.showOneTodo(id);
     }
