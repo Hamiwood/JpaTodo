@@ -39,13 +39,13 @@ public class User extends Timestamped{
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Todo> todos = new ArrayList<>();
 
-    public User(String username, String email) {
-        this.username = username;
-        this.email = email;
-    }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
+
 
     public User(UserRequestDto reqDto) {
         this.username = reqDto.getUsername();
