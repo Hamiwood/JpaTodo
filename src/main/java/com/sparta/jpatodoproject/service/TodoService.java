@@ -7,6 +7,7 @@ import com.sparta.jpatodoproject.entity.User;
 import com.sparta.jpatodoproject.repository.CommentRepository;
 import com.sparta.jpatodoproject.repository.TodoRepository;
 import com.sparta.jpatodoproject.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,10 +27,13 @@ public class TodoService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
 
-    public TodoResponseDto createTodo(WriterRequestDto reqDto) {
+    public TodoResponseDto createTodo(WriterRequestDto reqDto, HttpServletRequest httpreq) {
 
-        User user = new User(reqDto.getUsername(), reqDto.getEmail());
-        userRepository.save(user);
+
+        User user = (User)httpreq.getAttribute("user");
+        if(user == null) {
+            throw new IllegalArgumentException("로그인 후 이용하실 수 있습니다");
+        }
 
         Todo todo = new Todo(reqDto.getTitle(),reqDto.getContents());
         todo.setUser(user);
@@ -37,6 +41,7 @@ public class TodoService {
 
         todoRepository.save(todo);
 
+        //return new TodoResponseDto(todo);
         return new TodoResponseDto(todo, user.getId());
     }
 

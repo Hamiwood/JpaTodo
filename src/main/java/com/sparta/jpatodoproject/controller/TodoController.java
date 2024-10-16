@@ -4,6 +4,7 @@ import com.sparta.jpatodoproject.dto.TodoRequestDto;
 import com.sparta.jpatodoproject.dto.TodoResponseDto;
 import com.sparta.jpatodoproject.dto.WriterRequestDto;
 import com.sparta.jpatodoproject.service.TodoService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -21,8 +22,8 @@ public class TodoController {
     }
 
     @PostMapping
-    public TodoResponseDto createTodo(@RequestBody WriterRequestDto reqDto){
-        return todoService.createTodo(reqDto);
+    public TodoResponseDto createTodo(@RequestBody WriterRequestDto reqDto, HttpServletRequest httpreq){
+        return todoService.createTodo(reqDto, httpreq);
     }
 
     @GetMapping
