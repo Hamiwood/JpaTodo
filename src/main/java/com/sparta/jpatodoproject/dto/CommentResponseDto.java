@@ -16,6 +16,15 @@ public class CommentResponseDto {
     private LocalDateTime updatedAt;
     private Long todo_id;
 
+    public CommentResponseDto(Comment comment) {
+        this.id = comment.getId();
+        this.userId = comment.getUser().getId();
+        this.contents = comment.getContents();
+        this.createdAt = comment.getCreatedAt();
+        this.updatedAt = comment.getUpdatedAt();
+        this.todo_id = comment.getTodo().getId();
+    }
+
     public CommentResponseDto(Comment comment, Long todoId) {
         this.id = comment.getId();
         this.userId = comment.getUser().getId();

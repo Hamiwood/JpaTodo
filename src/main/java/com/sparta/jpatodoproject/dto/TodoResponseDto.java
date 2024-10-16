@@ -19,22 +19,22 @@ public class TodoResponseDto {
     private LocalDateTime updatedAt;
     private List<CommentResponseDto> comments;
 
-    public TodoResponseDto(Todo todo) {
+    public TodoResponseDto(Todo todo){
         this.id = todo.getId();
-        this.userId = todo.getUser() != null ? todo.getUser().getId() : null;
+        this.userId = todo.getUser().getId();
         this.title = todo.getTitle();
         this.contents = todo.getContents();
         this.createdAt = todo.getCreatedAt();
-        this.updatedAt = LocalDateTime.now();
+        this.updatedAt = todo.getUpdatedAt();
     }
 
     public TodoResponseDto(Todo todo, List<CommentResponseDto> commentList) {
         this.id = todo.getId();
-        this.userId = todo.getUser() != null ? todo.getUser().getId() : null;
+        this.userId = todo.getUser().getId();
         this.title = todo.getTitle();
         this.contents = todo.getContents();
         this.createdAt = todo.getCreatedAt();
-        this.updatedAt = LocalDateTime.now();
+        this.updatedAt = todo.getUpdatedAt();
         this.comments = commentList;
     }
 

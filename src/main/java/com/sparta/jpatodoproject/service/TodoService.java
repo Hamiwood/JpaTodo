@@ -69,7 +69,7 @@ public class TodoService {
         List<CommentResponseDto> resDtoList = new ArrayList<>();
 
         for (Comment comment : commentList) {
-            resDtoList.add(new CommentResponseDto(comment, id));
+            resDtoList.add(new CommentResponseDto(comment));
         }
 
         return new TodoResponseDto(todo, resDtoList);
@@ -90,7 +90,7 @@ public class TodoService {
 
         todo.update(reqDto);
 
-        return new TodoResponseDto(todo);
+        return new TodoResponseDto(todo, authenticatedUser.getId());
     }
 
     @Transactional
