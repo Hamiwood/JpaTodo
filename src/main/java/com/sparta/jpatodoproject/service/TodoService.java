@@ -29,7 +29,6 @@ public class TodoService {
 
     public TodoResponseDto createTodo(WriterRequestDto reqDto, HttpServletRequest httpreq) {
 
-
         User user = (User)httpreq.getAttribute("user");
         if(user == null) {
             throw new IllegalArgumentException("로그인 후 이용하실 수 있습니다");
@@ -41,7 +40,6 @@ public class TodoService {
 
         todoRepository.save(todo);
 
-        //return new TodoResponseDto(todo);
         return new TodoResponseDto(todo, user.getId());
     }
 

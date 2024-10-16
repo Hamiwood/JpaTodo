@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,10 +105,10 @@ public class UserService {
         String password = reqDto.getPassword();
 
         User user = userRepository.findByEmail(email).orElseThrow(()->
-                new IllegalArgumentException("등록된 사용자가 없습니다")
+                new IllegalArgumentException("이메일이 일치하지 않습니다")
         );
 
-        if(!passwordEncoder.matches(password, user.getPassword())){
+        if(!passwordEncoder.matches(password, user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다");
         }
 
