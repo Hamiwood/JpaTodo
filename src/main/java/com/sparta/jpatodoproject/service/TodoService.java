@@ -73,10 +73,17 @@ public class TodoService {
     }
 
     @Transactional
-    public TodoResponseDto updateTodo(Long id, TodoRequestDto reqDto) {
+    public TodoResponseDto updateTodo(Long id, TodoRequestDto reqDto, HttpServletRequest req) {
+
+        User authenticatedUser = (User) req.getAttribute("user");
+
         Todo todo = todoRepository.findById(id).orElseThrow(()->
                 new NullPointerException("해당 일정을 찾을 수 없습니다")
         );
+
+        if (!todo.getUser().getId().equals(authenticatedUser.getId())) {
+            throw new IllegalArgumentException("일정을 수정할 권한이 없습니다.");
+        }
 
         todo.update(reqDto);
 
@@ -84,13 +91,21 @@ public class TodoService {
     }
 
     @Transactional
-    public String removeTodo(Long id) {
-        todoRepository.findById(id).orElseThrow(()->
+    public String removeTodo(Long id, HttpServletRequest req) {
+
+        User authenticatedUser = (User) req.getAttribute("user");
+
+        Todo todo = todoRepository.findById(id).orElseThrow(()->
                 new NullPointerException("해당 일정을 찾을 수 없습니다")
         );
+
+        if (!todo.getUser().getId().equals(authenticatedUser.getId())) {
+            throw new IllegalArgumentException("일정을 삭제할 권한이 없습니다.");
+        }
 
         todoRepository.deleteById(id);
 
         return id+"이(가) 성공적으로 삭제되었습니다";
     }
+
 }

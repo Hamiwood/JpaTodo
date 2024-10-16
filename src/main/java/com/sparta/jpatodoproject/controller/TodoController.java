@@ -38,12 +38,12 @@ public class TodoController {
     }
 
     @PutMapping("/{id}")
-    public TodoResponseDto updateTodo(@PathVariable Long id, @RequestBody TodoRequestDto reqDto){
-        return todoService.updateTodo(id, reqDto);
+    public TodoResponseDto updateTodo(@PathVariable Long id, @RequestBody TodoRequestDto reqDto, HttpServletRequest httpreq){
+        return todoService.updateTodo(id, reqDto, httpreq);
     }
 
     @DeleteMapping("/{id}")
-    public String removeTodo(@PathVariable Long id){
-        return todoService.removeTodo(id);
+    public String removeTodo(@PathVariable Long id, HttpServletRequest httpreq){
+        return todoService.removeTodo(id, httpreq);
     }
 }
