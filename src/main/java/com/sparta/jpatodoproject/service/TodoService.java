@@ -4,6 +4,7 @@ import com.sparta.jpatodoproject.dto.*;
 import com.sparta.jpatodoproject.entity.Comment;
 import com.sparta.jpatodoproject.entity.Todo;
 import com.sparta.jpatodoproject.entity.User;
+import com.sparta.jpatodoproject.entity.UserRoleEnum;
 import com.sparta.jpatodoproject.repository.CommentRepository;
 import com.sparta.jpatodoproject.repository.TodoRepository;
 import com.sparta.jpatodoproject.repository.UserRepository;
@@ -12,8 +13,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,8 +84,8 @@ public class TodoService {
                 new NullPointerException("해당 일정을 찾을 수 없습니다")
         );
 
-        if (!todo.getUser().getId().equals(authenticatedUser.getId())) {
-            throw new IllegalArgumentException("일정을 수정할 권한이 없습니다.");
+        if(authenticatedUser.getRole() != UserRoleEnum.ADMIN) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "관리자만 접근이 가능한 서비스입니다");
         }
 
         todo.update(reqDto);
@@ -95,12 +98,12 @@ public class TodoService {
 
         User authenticatedUser = (User) req.getAttribute("user");
 
-        Todo todo = todoRepository.findById(id).orElseThrow(()->
+        todoRepository.findById(id).orElseThrow(()->
                 new NullPointerException("해당 일정을 찾을 수 없습니다")
         );
 
-        if (!todo.getUser().getId().equals(authenticatedUser.getId())) {
-            throw new IllegalArgumentException("일정을 삭제할 권한이 없습니다.");
+        if(authenticatedUser.getRole() != UserRoleEnum.ADMIN) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "관리자만 접근이 가능한 서비스입니다");
         }
 
         todoRepository.deleteById(id);
