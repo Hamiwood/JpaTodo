@@ -87,7 +87,6 @@ public class UserService {
 
         userRepository.save(user);
 
-        //JWT
         login(new LoginRequestDto(reqDto.getEmail(), reqDto.getPassword()), res);
 
         return new UserResponseDto(user);

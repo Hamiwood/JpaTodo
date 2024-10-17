@@ -34,21 +34,17 @@ public class AuthFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String url = httpServletRequest.getRequestURI();
 
+        // 회원가입, 로그인, 조회 관련 API 는 인증 필요없이 요청 진행
         if (StringUtils.hasText(url) &&
                 (url.startsWith("/user/login") || url.contains("/user/signup") || url.contains("get"))
         ) {
-            // 회원가입, 로그인 관련 API 는 인증 필요없이 요청 진행
-            chain.doFilter(request, response); // 다음 Filter 로 이동
+            chain.doFilter(request, response);
         } else {
-            // 나머지 API 요청은 인증 처리 진행
-            // 토큰 확인
             String tokenValue = jwtUtil.getTokenFromRequest(httpServletRequest);
 
-            if (StringUtils.hasText(tokenValue)) { // 토큰이 존재하면 검증 시작
-                // JWT 토큰 substring
+            if (StringUtils.hasText(tokenValue)) {
                 String token = jwtUtil.substringToken(tokenValue);
 
-                // 토큰 검증
                 if (!jwtUtil.validateToken(token)) {
                     httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                     httpServletResponse.getWriter().write("유효하지 않은 토큰입니다");
@@ -63,7 +59,7 @@ public class AuthFilter implements Filter {
                 );
 
                 request.setAttribute("user", user);
-                chain.doFilter(request, response); // 다음 Filter 로 이동
+                chain.doFilter(request, response);
             } else {
                 httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 httpServletResponse.getWriter().write("토큰을 찾을 수 없습니다");
