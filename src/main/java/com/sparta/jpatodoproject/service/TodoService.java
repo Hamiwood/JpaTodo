@@ -5,6 +5,7 @@ import com.sparta.jpatodoproject.entity.Comment;
 import com.sparta.jpatodoproject.entity.Todo;
 import com.sparta.jpatodoproject.entity.User;
 import com.sparta.jpatodoproject.entity.UserRoleEnum;
+import com.sparta.jpatodoproject.exception.NotAdminException;
 import com.sparta.jpatodoproject.repository.CommentRepository;
 import com.sparta.jpatodoproject.repository.TodoRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Slf4j(topic="WEATHER API")
@@ -34,6 +38,7 @@ public class TodoService {
     private final TodoRepository todoRepository;
     private final CommentRepository commentRepository;
     private final RestTemplate restTemplate;
+    private final MessageSource messageSource;
 
     public TodoResponseDto createTodo(WriterRequestDto reqDto, HttpServletRequest httpreq) {
 
@@ -121,7 +126,12 @@ public class TodoService {
         );
 
         if(authenticatedUser.getRole() != UserRoleEnum.ADMIN) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "관리자만 접근이 가능한 서비스입니다");
+            throw new NotAdminException(messageSource.getMessage(
+                    "not.admin",
+                    null,
+                    "Not Admin",
+                    Locale.getDefault()
+            ));
         }
 
         todo.update(reqDto);
@@ -139,7 +149,12 @@ public class TodoService {
         );
 
         if(authenticatedUser.getRole() != UserRoleEnum.ADMIN) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "관리자만 접근이 가능한 서비스입니다");
+            throw new NotAdminException(messageSource.getMessage(
+                    "not.admin",
+                    null,
+                    "Not Admin",
+                    Locale.getDefault()
+            ));
         }
 
         todoRepository.deleteById(id);

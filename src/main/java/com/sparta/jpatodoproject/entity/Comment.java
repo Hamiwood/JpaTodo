@@ -20,7 +20,6 @@ public class Comment extends Timestamped{
     private Long id;
 
     @Column(name = "contents")
-    @Size(min = 1, max = 50, message = "1자 이상 50자 이하로 작성해 주세요")
     private String contents;
 
     @ManyToOne(fetch = FetchType.EAGER)

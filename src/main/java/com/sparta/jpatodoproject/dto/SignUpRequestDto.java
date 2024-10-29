@@ -1,5 +1,6 @@
 package com.sparta.jpatodoproject.dto;
 
+import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
 

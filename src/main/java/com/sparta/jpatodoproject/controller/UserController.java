@@ -6,7 +6,10 @@ import com.sparta.jpatodoproject.dto.UserRequestDto;
 import com.sparta.jpatodoproject.dto.UserResponseDto;
 import com.sparta.jpatodoproject.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -37,6 +40,15 @@ public class UserController {
 
     @PostMapping("/signup")
     public UserResponseDto registerUser(@RequestBody SignUpRequestDto reqDto, HttpServletResponse res) {
+        if(!reqDto.getPassword().matches("^(?=.*[a-zA-Z])(?=.*[~!@#$%^&*+=()_-])(?=.*[0-9]).+$")){
+            throw new IllegalArgumentException("숫자, 문자, 기호를 포함한 비밀번호를 입력하십시오.");
+        }
+        if((reqDto.getUsername().length()>6||reqDto.getUsername().length()<2)){
+            throw new IllegalArgumentException("이름은 2자 이상 6자 이하로 입력하십시오.");
+        }
+        if(!reqDto.getEmail().matches("^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")){
+            throw new IllegalArgumentException("이메일 형식이 잘못되었습니다");
+        }
         return userService.signUp(reqDto, res);
     }
 

@@ -22,11 +22,9 @@ public class Todo extends Timestamped{
     private Long id;
 
     @Column(name ="title")
-    @Size(min = 1, max = 20, message = "1자 이상 20자 이하로 작성해 주세요")
     private String title;
 
     @Column(name ="contents")
-    @Size(min = 1, max = 100, message = "1자 이상 100자 이하로 작성해 주세요")
     private String contents;
 
     @Column(name = "weather")
